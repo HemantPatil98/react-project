@@ -1,0 +1,28 @@
+{
+  "name": "react-project",
+  "version": "1.0.0",
+  "description": "react project by Hemant Patil",
+  "default": "index.html",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HemantPatil98/react-project.git"
+  },
+  "author": "Hemant Patil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HemantPatil98/react-project/issues"
+  },
+  "homepage": "https://github.com/HemantPatil98/react-project#readme",
+  "devDependencies": {
+    "parcel": "^2.15.4"
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  }
+}
