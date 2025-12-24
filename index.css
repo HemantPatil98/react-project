@@ -3,14 +3,12 @@ body {
   height: 100vh;
   margin: 0;
   padding: 0;
+  font-size: 14px;
 }
 p {
   margin: 0;
 }
 .body-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
   width: 100%;
   height: 100%;
   padding-top: 90px;
@@ -47,9 +45,22 @@ p {
   flex-wrap: wrap;
   display: flex;
   width: 100%;
+  a {
+    text-decoration: none; /* Removes the default underline */
+    color: inherit; /* Inherits the color from the parent element */
+    cursor: auto; /* Resets the cursor to the default pointer (optional) */
+  }
+
+  /* Ensure styles are consistent across all link states */
+  a:link,
+  a:visited,
+  a:hover,
+  a:active {
+    text-decoration: none;
+    color: inherit;
+  }
 }
 .rest-card-container {
-  width: 22%;
   max-width: 300px;
   border-radius: 1rem;
 }
@@ -119,7 +130,9 @@ p {
     margin: 0;
     padding: 0;
     .nav-item {
-      width: 80px;
+      width: max-content;
+      margin-left: 20px;
+      cursor: pointer;
     }
   }
 }
@@ -205,4 +218,79 @@ p {
 .shimmer-res-rating {
   width: 100%;
   height: 1rem;
+}
+
+.rest-list-main-container {
+  max-width: 800px;
+  margin: 20px auto 0;
+}
+.resName {
+  font-size: 2em;
+  margin-block: 25px;
+}
+.resDetails {
+  border: 1px solid rgb(142, 141, 141);
+  border-radius: 5px;
+  padding: 10px;
+}
+.ratingAndPrice {
+  font-size: 1.2em;
+}
+.cuesine {
+  padding-top: 5px;
+}
+.menuHeader {
+  margin-top: 25px;
+  text-align: center;
+  font-size: 1.2em;
+}
+.filterToggles {
+  font-size: 1.1em;
+  padding-block: 10px;
+  .vegToggle {
+    margin-right: 10px;
+  }
+  .nonvegToggle {
+    margin-right: 10px;
+  }
+}
+
+.accordionBorder {
+  height: 20px;
+  border-radius: 5px;
+  background-color: #eaeaea;
+}
+.itemCard {
+  border-block-end: 1px solid #a9a8a8;
+  padding: 5px;
+}
+/* Flex */
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-cloumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.justify-content-start {
+  justify-content: flex-start;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.justify-content-space-between {
+  justify-content: space-between;
+}
+
+.align-items-start {
+  align-items: flex-start;
+}
+
+.align-items-center {
+  align-items: center;
 }

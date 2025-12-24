@@ -1,51 +1,66 @@
 import { useState, useEffect } from "react";
 import RestaurantCard from "./RestaurantCard";
-import { restaurants } from "../utils/mockData";
+import { RESTAURANT_LIST_URL } from "../utils/constant";
+import useFetch from "../utils/useFetch";
 import Shimmer from "./Shimmer";
+import { Link } from "react-router";
 
 const Body = () => {
+  const { data, loading, error } = useFetch(RESTAURANT_LIST_URL); //Custom Hook
+  const listOfRestaurants =
+    data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+      ?.restaurants || []; // imp: if API response is undefined [] will be set.
+
   const [filteredRes, setFilteredRes] = useState([]);
+  const [noDataFound, setNoDataFound] = useState(false);
 
   useEffect(() => {
-    fetchRestaurantsData();
-  }, []);
+    setFilteredRes(listOfRestaurants);
+    setNoDataFound(false);
+  }, [listOfRestaurants]);
 
   const search = (formData) => {
     const searchValue = formData.get("search-res");
-    const searchResult = restaurants.filter((res) => {
+    const searchResult = listOfRestaurants.filter((res) => {
       return res?.info?.name.toLowerCase().includes(searchValue.toLowerCase());
     });
-    setFilteredRes(searchResult);
-  };
 
-  const filerByRating = () => {
-    const filterRes = filteredRes.filter((res) => res.info.avgRating >= 4.0);
-    setFilteredRes(filterRes);
-  };
-
-  const fetchRestaurantsData = async () => {
-    try {
-      const res = await fetch(
-        "https://www.swiggy.com/dapi/restaurants/list/v5?lat=21.99740&lng=79.00110&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-      );
-      const data = await res.json();
-      setFilteredRes(
-        data?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
-          ?.restaurants
-      );
-    } catch (error) {
-      console.log("An error occured: ", error);
+    if (searchResult.length !== 0) {
+      setNoDataFound(false);
+      setFilteredRes(searchResult);
+    } else {
+      setNoDataFound(true);
     }
   };
 
-  const renderShimmerUI = () => {
-    return <Shimmer />;
+  const filerByRating = () => {
+    const filterRes = listOfRestaurants.filter(
+      (res) => res.info.avgRating >= 4.0
+    );
+
+    if (filterRes.length !== 0) {
+      setNoDataFound(false);
+      setFilteredRes(filterRes);
+    } else {
+      setNoDataFound(true);
+    }
+  };
+
+  const messageContainer = () => {
+    return (
+      <div className="msg-container">
+        <h2>Sorry, No restaurants found..</h2>
+      </div>
+    );
   };
 
   return (
-    <div className="body-container">
-      {filteredRes.length === 0 && renderShimmerUI()}
-      {filteredRes.length !== 0 && (
+    <div className="body-container flex-row justify-content-center">
+      {loading ? (
+        <Shimmer />
+      ) : error ? (
+        <div>{error}</div>
+      ) : (
         <div className="rest-container">
           <div className="filter-bar">
             <div className="search-bar-container">
@@ -67,14 +82,20 @@ const Body = () => {
               </button>
             </div>
           </div>
-          <div className="rest-cards-list-container">
-            {filteredRes.map((restaurant) => (
-              <RestaurantCard
-                key={restaurant?.info?.id}
-                restData={restaurant}
-              />
-            ))}
-          </div>
+          {noDataFound ? (
+            messageContainer()
+          ) : (
+            <div className="rest-cards-list-container">
+              {filteredRes.map((restaurant) => (
+                <Link
+                  key={restaurant?.info?.id}
+                  to={"restaurant/" + restaurant?.info?.id}
+                >
+                  <RestaurantCard restData={restaurant} />
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>

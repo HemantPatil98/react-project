@@ -3,3 +3,9 @@ export const IMG_URL =
 
 export const LOGO_URL =
   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT63ljarYZHctH5yHl6fjX7kwMDJ1hB3V-b9g&s";
+
+export const RESTAURANT_LIST_URL =
+  "https://namastedev.com/api/v1/listRestaurants";
+
+export const RESTAURANT_MENU_URL =
+  "https://namastedev.com/api/v1/listRestaurantMenu/";
