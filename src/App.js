@@ -1,22 +1,18 @@
-import React from "react";
+import { lazy, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import Header from "./components/Header";
 import Body from "./components/Body";
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Outlet,
-  BrowserRouter,
-  Routes,
-  Route,
-} from "react-router";
+import { Outlet, BrowserRouter, Routes, Route } from "react-router";
 import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
 import Error from "./components/Error";
 import UserProfile from "./components/UserProfile";
 import UserInfo from "./components/userInfo";
 import EditUserInfo from "./components/EditUserInfo";
-import RestaurantMenu from "./components/RestaurantMenu";
+import Shimmer from "./components/Shimmer.js";
+
+//Lazy Loading
+const RestaurantMenu = lazy(() => import("./components/RestaurantMenu.js"));
 
 const AppLayout = () => (
   <div className="applayout">
@@ -86,7 +82,14 @@ root.render(
           <Route path=":pid" element={<UserInfo />}></Route>
           <Route path="editprofile" element={<EditUserInfo />}></Route>
         </Route>
-        <Route path="restaurant/:resId" element={<RestaurantMenu />}></Route>
+        <Route
+          path="restaurant/:resId"
+          element={
+            <Suspense fallback={<Shimmer />}>
+              <RestaurantMenu />
+            </Suspense>
+          }
+        ></Route>
       </Route>
     </Routes>
   </BrowserRouter>
