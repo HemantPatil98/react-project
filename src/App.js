@@ -1,5 +1,4 @@
-import { lazy, Suspense } from "react";
-import { createRoot } from "react-dom/client";
+import { lazy, Suspense, useEffect, useState } from "react";
 import Header from "./components/Header";
 import Body from "./components/Body";
 import { Outlet, BrowserRouter, Routes, Route } from "react-router";
@@ -7,20 +6,40 @@ import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";
 import Error from "./components/Error";
 import UserProfile from "./components/UserProfile";
-import UserInfo from "./components/userInfo";
-import EditUserInfo from "./components/EditUserInfo";
 import Shimmer from "./components/Shimmer.js";
+import UserContext from "./utils/UserContext.js";
+import Cart from "./components/Cart.js";
 
 //Lazy Loading
 const RestaurantMenu = lazy(() => import("./components/RestaurantMenu.js"));
 
-const AppLayout = () => (
-  <div className="applayout">
-    <Header />
-    {/** Children routes will render in place of <Outlet/> */}
-    <Outlet />
-  </div>
-);
+const AppLayout = () => {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    //data is coming from an API call to get the logged in user
+    const data = {
+      firstName: "Hemant",
+      lastName: "Patil",
+      email: "hemantpatil@gmail.com",
+      address: "Pune, Maharashtra",
+    };
+
+    setUserData(data);
+  }, []);
+
+  return (
+    <div className="applayout">
+      <UserContext value={userData}>
+        <Header />
+        {/** Children routes will render in place of <Outlet/> */}
+        <main className="px-5 pt-10 flex flex-row justify-center">
+          <Outlet />
+        </main>
+      </UserContext>
+    </div>
+  );
+};
 
 // const appRouter = createBrowserRouter([
 //   {
@@ -67,30 +86,28 @@ const AppLayout = () => (
 //   },
 // ]);
 
-const root = createRoot(document.getElementById("root"));
-
-//React components needs to be rendered with angular brackets
-root.render(
-  <BrowserRouter>
-    <Routes>
-      <Route element={<AppLayout />} errorElement={<Error />}>
-        <Route index element={<Body />}></Route>
-        <Route path="about" element={<AboutUs />}></Route>
-        <Route path="contact" element={<ContactUs />}></Route>
-        <Route path="profile">
-          <Route index element={<UserProfile />}></Route>
-          <Route path=":pid" element={<UserInfo />}></Route>
-          <Route path="editprofile" element={<EditUserInfo />}></Route>
+const App = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route element={<AppLayout />} errorElement={<Error />}>
+          <Route index element={<Body />}></Route>
+          <Route path="about" element={<AboutUs />}></Route>
+          <Route path="contact" element={<ContactUs />}></Route>
+          <Route path="cart" element={<Cart />}></Route>
+          <Route path="profile/:pid" element={<UserProfile />}></Route>
+          <Route
+            path="restaurant/:resId"
+            element={
+              <Suspense fallback={<Shimmer />}>
+                <RestaurantMenu />
+              </Suspense>
+            }
+          ></Route>
         </Route>
-        <Route
-          path="restaurant/:resId"
-          element={
-            <Suspense fallback={<Shimmer />}>
-              <RestaurantMenu />
-            </Suspense>
-          }
-        ></Route>
-      </Route>
-    </Routes>
-  </BrowserRouter>
-);
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default App;

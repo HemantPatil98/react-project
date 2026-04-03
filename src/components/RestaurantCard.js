@@ -9,12 +9,18 @@ const RestaurantCard = (props) => {
     cloudinaryImageId,
   } = props?.restData?.info;
   return (
-    <div className="rest-card-container">
-      <div className="rest-card">
-        <img src={IMG_URL + cloudinaryImageId} alt="" />
+    <div>
+      <div data-testid="resCard" className="w-72">
+        <div>
+          <img
+            className="w-72 h-60 rounded-2xl"
+            src={IMG_URL + cloudinaryImageId}
+            alt="restaurant image"
+          />
+        </div>
         <div className="dish-detail">
-          <p className="rest-name">{name}</p>
-          <p className="rest-type">{cuisines.join(", ")}</p>
+          <p className="text-lg font-bold">{name}</p>
+          <p className="text-wrap">{cuisines.join(", ")}</p>
         </div>
         <div className="rating-details">
           <div className="rating">

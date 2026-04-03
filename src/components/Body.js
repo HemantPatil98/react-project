@@ -12,7 +12,8 @@ const Body = () => {
   const [searchText, setSearchText] = useState("");
   const [ratingFilter, setRatingFilter] = useState(false);
 
-  const { data, loading, error } = useFetch(RESTAURANT_LIST_URL); //Custom Hook
+  const { data, loading, error } = useFetch(RESTAURANT_LIST_URL);
+  //Custom Hook
   const onlineStatus = useOnlineStatus();
   const debouncedSearchText = useDebounce(searchText, 400);
 
@@ -66,26 +67,29 @@ const Body = () => {
   }
 
   return (
-    <div className="body-container flex-row justify-content-center">
+    <div className="body-container flex flex-row justify-content-center w-[1260px]">
       {loading ? (
         <Shimmer />
       ) : error ? (
         <div>{error}</div>
       ) : (
-        <div className="rest-container">
-          <div className="filter-bar">
-            <div className="search-bar-container">
+        <div>
+          <div className="w-full flex flex-row content-start items-center gap-10 pb-10">
+            <div>
               <input
-                className="search-input"
-                type="search"
+                data-testid="search-input"
+                className="w-sm p-2 mr-2 border border-gray-300 rounded-md text-sm leading-6"
+                type="text"
+                placeholder="Search"
                 name="search-res"
                 id="res-search"
                 onChange={(e) => setSearchText(e.target.value)}
               />
             </div>
-            <div className="rating-filter">
+            <div>
               <button
-                className="filter-btn"
+                data-testid="rating-filter"
+                className="w-fit mr-2 p-2 text-white bg-green-500 hover:bg-green-600 active:bg-green-700 rounded-md cursor-pointer font-bold"
                 onClick={() => setRatingFilter((prev) => !prev)}
               >
                 Rating 4.0+
@@ -95,11 +99,12 @@ const Body = () => {
           {filteredRestaurants.length === 0 ? (
             messageContainer()
           ) : (
-            <div className="rest-cards-list-container">
+            <div className="mx-auto flex flex-row space-y-6 flex-wrap">
               {filteredRestaurants.map((restaurant) => (
                 <Link
                   key={restaurant?.info?.id}
                   to={"restaurant/" + restaurant?.info?.id}
+                  className="basis-1/4"
                 >
                   <RestaurantCard restData={restaurant} />
                 </Link>
